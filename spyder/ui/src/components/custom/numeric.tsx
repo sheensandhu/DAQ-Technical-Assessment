@@ -1,6 +1,20 @@
+import { cn } from "@/lib/utils";
+
 interface TemperatureProps {
-  temp: any;
+  temp: number;
 }
+
+/**
+ * Get temperature color class based on value ranges
+ * Safe (20-80): Green
+ * Nearing unsafe (20-25 or 75-80): Yellow
+ * Unsafe (<20 or >80): Red
+ */
+const getTemperatureColorClass = (temp: number): string => {
+  if (temp < 20 || temp > 80) return "text-destructive";
+  if ((temp >= 20 && temp < 25) || (temp > 75 && temp <= 80)) return "text-yellow-500";
+  return "text-emerald-500";
+};
 
 /**
  * Numeric component that displays the temperature value.
@@ -9,17 +23,14 @@ interface TemperatureProps {
  * @returns {JSX.Element} The rendered Numeric component.
  */
 function Numeric({ temp }: TemperatureProps) {
-  // TODO: Change the color of the text based on the temperature
-  // HINT:
-  //  - Consider using cn() from the utils folder for conditional tailwind styling
-  //  - (or) Use the div's style prop to change the colour
-  //  - (or) other solution
-
-  // Justify your choice of implementation in brainstorming.md
-
+  const colorClass = getTemperatureColorClass(temp);
+  
   return (
-    <div className="text-foreground text-4xl font-bold">
-      {`${temp}°C`}
+    <div className={cn(
+      "text-4xl font-bold transition-colors duration-200",
+      colorClass
+    )}>
+      {`${temp.toFixed(3)}°C`}
     </div>
   );
 }
